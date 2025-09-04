@@ -6,6 +6,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import http from "http"
 
+import { connectDB } from "./utils/db.js";
+
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -16,6 +18,8 @@ app.use(cors({
 app.use(cookieParser())
 
 try {
+    await connectDB();
+
     const PORT = process.env.PORT || 4000;
     httpServer.listen(PORT, () => {
         console.log(`Server running on port: ${PORT}`);
