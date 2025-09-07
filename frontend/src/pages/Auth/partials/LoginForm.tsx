@@ -37,6 +37,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
         },
         onError: (error) => {
             const msg = error.response?.data?.message || "Login failed"
+            toast.error(msg);
         }
     })
 
