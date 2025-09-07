@@ -5,7 +5,7 @@ import RegisterForm from "./partials/RegisterForm";
 import LoginForm from "./partials/LoginForm";
 
 const Auth: React.FC = () => {
-    const [isLogin, setIsLogin] = useState(false);
+    const [isLogin, setIsLogin] = useState(true);
 
     return <>
         <div className="min-h-screen w-full bg-white flex flex-col md:flex-row">
