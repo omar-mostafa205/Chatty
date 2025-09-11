@@ -88,7 +88,7 @@ class ConversationController {
                     return {
                         conversationId: conversation.id,
                         lastMessage: conversation.lastMessagePreview || null,
-                        unradCounts: {
+                        unreadCounts: {
                             [friendship.requester._id.toString()]: conversation.unreadCounts.get(friendship.requester._id.toString()) || 0,
                             [friendship.recipient._id.toString()]: conversation.unreadCounts.get(friendship.recipient._id.toString()) || 0,
                         },
