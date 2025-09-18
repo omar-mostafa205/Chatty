@@ -1,3 +1,4 @@
+import { leaveAllRooms } from "./socket/helpers.js";
 
 
 export const initializeSocket = async (io) => {
@@ -6,6 +7,10 @@ export const initializeSocket = async (io) => {
             const user = socket.user;
             console.log("User connected", user.id);
             socket.join(user._id.toString());
+
+            socket.on('disconnect', async () => {
+                leaveAllRooms(socket);
+            })
 
         } catch (error) {
             console.error("Socket connection error", error);
