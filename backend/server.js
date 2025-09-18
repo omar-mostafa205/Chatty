@@ -13,6 +13,7 @@ import { connectDB } from "./utils/db.js";
 import authRoutes from "./routes/authRoutes.js"
 import conversationRoutes from "./routes/conversationRoutes.js";
 import { initializeSocket } from "./socket.js";
+import { socketAuthMiddleware } from "./socket/socketAuthMiddleware.js";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -38,6 +39,7 @@ const io = new Server(httpServer, {
     pingInterval: 25000,
     pingTimeout: 60000,
 })
+io.use(socketAuthMiddleware);
 
 await initializeSocket(io);
 

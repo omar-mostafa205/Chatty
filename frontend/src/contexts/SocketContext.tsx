@@ -31,6 +31,16 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
         socketClient.on("connect", () => {
             console.log("Socket connected", socketClient.id);
+        });
+
+        socketClient.on("connect_error", (error) => {
+            console.error("Connection error", error);
+            toast.error("Socket connection error");
+        })
+
+        socketClient.on("internal_error", (error) => {
+            console.error("Connection error", error);
+            toast.error("Socket connection error");
         })
 
         return () => {
