@@ -1,4 +1,5 @@
 import { leaveAllRooms } from "./socket/helpers.js";
+import { notifyConversationOnlineStatus } from "./socket/socketConversation.js";
 
 
 export const initializeSocket = async (io) => {
@@ -8,7 +9,10 @@ export const initializeSocket = async (io) => {
             console.log("User connected", user.id);
             socket.join(user._id.toString());
 
+            await notifyConversationOnlineStatus(io, socket, true);
+
             socket.on('disconnect', async () => {
+                await notifyConversationOnlineStatus(io, socket, false);
                 leaveAllRooms(socket);
             })
 
