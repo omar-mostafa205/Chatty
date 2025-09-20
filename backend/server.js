@@ -15,6 +15,8 @@ import conversationRoutes from "./routes/conversationRoutes.js";
 import { initializeSocket } from "./socket.js";
 import { socketAuthMiddleware } from "./socket/socketAuthMiddleware.js";
 
+import RedisService from "./services/RedisService.js";
+
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -42,6 +44,8 @@ const io = new Server(httpServer, {
 io.use(socketAuthMiddleware);
 
 await initializeSocket(io);
+
+await RedisService.initialize();
 
 try {
     await connectDB();
