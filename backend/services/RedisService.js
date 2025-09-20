@@ -44,6 +44,43 @@ class RedisService {
             return fallback;
         }
     }
+
+    async addUserSession(userId, socketId) {
+        await this._safe(async () => {
+            const key = `user:${userId}:sessions`;
+            await this.client.sAdd(key, socketId);
+            await this.client.expire(key, 600); // 10 minutes
+        })
+    }
+
+    async getUserSessionsCount(userId) {
+        return await this._safe(async () => {
+            return this.client.sCard(`user:${userId}:sessions`);
+        }, 0)
+    }
+
+    async removeUserSession(userId, socketId) {
+        await this._safe(async () => {
+            const key = `user:${userId}:sessions`;
+            await this.client.sRem(key, socketId);
+
+            const remaining = await this.getUserSessionsCount(userId);
+            if (remaining == 0) {
+                await this.client.del(key);
+            }
+        })
+    }
+
+    async removeAllUserSessions(userId) {
+        await this._safe(async () => {
+            await this.client.del(`user:${userId}:sessions`);
+        })
+    }
+
+    async isUserOnline(userId) {
+        const count = await this.getUserSessionsCount(userId);
+        return count > 0;
+    }
 }
 
 export default new RedisService();
