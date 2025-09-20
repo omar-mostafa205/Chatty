@@ -30,6 +30,20 @@ class RedisService {
             console.log("Redis disconnected!");
         }
     }
+
+    async _safe(action, fallback = null) {
+        if (!this.client) {
+            await this.initialize();
+            if (!this.client) return fallback;
+        }
+
+        try {
+            return await action();
+        } catch (error) {
+            console.error("Redis error", error);
+            return fallback;
+        }
+    }
 }
 
 export default new RedisService();
