@@ -64,7 +64,7 @@ const ConversationItem: React.FC<Conversation> = ({
                     {lastMessage?.content ?? ''}
                 </p>
                 {user && unreadCounts[user.id] > 0 && (
-                    <div className="bg-sky-500 ml-2 text-xs text-white rounded-full size-5 flex items-center justify-center flex-srhink-0">
+                    <div className="bg-sky-500 ml-2 text-xs text-white rounded-full size-5 flex items-center justify-center flex-shrink-0">
                         {unreadCounts[user.id]}
                     </div>
                 )}
