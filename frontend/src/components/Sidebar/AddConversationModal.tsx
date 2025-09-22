@@ -46,7 +46,7 @@ const AddConversationModal: React.FC<AddConversationModalProps> = ({
     })
 
     const onSubmit = async (formData: AddConversationFormData) => {
-        const result = refetch();
+        const result = await refetch();
 
         if (result?.data?.success) {
             socket?.emit('conversation:request', {

@@ -63,12 +63,25 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
             })
         })
     }
+    const handleNewConversation = (conversation: Conversation) => {
+        console.log("conversation:accept", conversation);
+        setConversations((prev) => {
+            return [...prev, conversation];
+        })
+        toast.success(`You and ${conversation.friend.username} are now friends!`);
+    }
+
+    const handleErrorNewConversation = () => toast.error("Unable to add conversation!");
 
     useEffect(() => {
         socket?.on("conversation:online-status", handleConversationOnlineStatus);
+        socket?.on("conversation:accept", handleNewConversation);
+        socket?.on("conversation:request:error", handleErrorNewConversation);
 
         return () => {
             socket?.off("conversation:online-status", handleConversationOnlineStatus);
+            socket?.off("conversation:accept", handleNewConversation);
+            socket?.off("conversation:request:error", handleErrorNewConversation);
         }
     }, [socket])
 
