@@ -85,8 +85,6 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
         }
     }, [socket])
 
-
-
     return <ConversationsContext.Provider value={{conversations, filteredConversations, searchTerm, setSearchTerm, isLoading, isError}}>
         {children}
     </ConversationsContext.Provider>
