@@ -4,7 +4,6 @@ import MessageItem from "./MessageItem";
 
 const MessageList: React.FC = () => {
     const { selectedConversation } = useConversationStore();
-
     const {data, isLoading} = useMessages(selectedConversation?.conversationId);
 
     const allMessages = data?.pages.slice().reverse().flatMap((page) => page.messages) ?? [];
