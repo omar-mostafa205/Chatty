@@ -1,5 +1,6 @@
 import { useMessages } from "../../hooks/useMessages";
 import { useConversationStore } from "../../stores/conversationStore";
+import MessageItem from "./MessageItem";
 
 const MessageList: React.FC = () => {
     const { selectedConversation } = useConversationStore();
@@ -17,7 +18,7 @@ const MessageList: React.FC = () => {
     return <div className="flex-1 bg-gray-50 overflow-y-auto p-4 pb-10">
         {allMessages.map((message) => (
             <div key={message._id}>
-                
+                <MessageItem {...message}/>
             </div>
         ))}
     </div>
