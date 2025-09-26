@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { messageService } from "../services/messageService";
 
 
-export function useMessages(conversationId: string | null) {
+export function useMessages(conversationId: string | undefined) {
     const query = useInfiniteQuery({
         queryKey: ["messages", conversationId],
         queryFn: async ({ pageParam }: {pageParam?: string}) => {
