@@ -71,17 +71,35 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
         toast.success(`You and ${conversation.friend.username} are now friends!`);
     }
 
+    const handleConversationUpdateUnreadCounts = (conversation: {conversationId: string, unreadCounts: Record<string, number>}) => {
+        console.log("conversation:update-unread-counts", conversation)
+        setConversations((prev) => {
+            return prev.map((c) => {
+                if (c.conversationId === conversation.conversationId) {
+                    return {...c, unreadCounts: conversation.unreadCounts}
+                } else {
+                    return c;
+                }
+            })
+        })
+    }
+
     const handleErrorNewConversation = () => toast.error("Unable to add conversation!");
+    const handleErrorConversationMarkAsRead = () => toast.error("Unable to add conversation!");
 
     useEffect(() => {
         socket?.on("conversation:online-status", handleConversationOnlineStatus);
         socket?.on("conversation:accept", handleNewConversation);
+        socket?.on("conversation:update-unread-counts", handleConversationUpdateUnreadCounts);
         socket?.on("conversation:request:error", handleErrorNewConversation);
+        socket?.on("conversation:mark-as-read:error", handleErrorConversationMarkAsRead);
 
         return () => {
             socket?.off("conversation:online-status", handleConversationOnlineStatus);
             socket?.off("conversation:accept", handleNewConversation);
+            socket?.off("conversation:update-unread-counts", handleConversationUpdateUnreadCounts);
             socket?.off("conversation:request:error", handleErrorNewConversation);
+            socket?.off("conversation:mark-as-read:error", handleErrorConversationMarkAsRead);
         }
     }, [socket])
 

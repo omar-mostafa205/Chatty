@@ -31,7 +31,7 @@ const MessageList: React.FC = () => {
             }, 0)
         }
 
-        socket?.emit("conversations:mark-as-red", {
+        socket?.emit("conversation:mark-as-read", {
             conversationId: selectedConversation?.conversationId,
             userId: user?.id,
             friendId: selectedConversation?.friend.id,
