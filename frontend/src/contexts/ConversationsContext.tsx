@@ -84,6 +84,19 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
         })
     }
 
+    const handleConversationUpdate = (conversation: Pick<Conversation, "conversationId" | "lastMessage" | "unreadCounts">) => {
+        console.log(conversation);
+        setConversations((prev) => {
+            return prev.map((c) => {
+                if (c.conversationId === conversation.conversationId) {
+                    return {...c, lastMessage: conversation.lastMessage, unreadCounts: conversation.unreadCounts}
+                }
+
+                return c;
+            })
+        })
+    }
+
     const handleErrorNewConversation = () => toast.error("Unable to add conversation!");
     const handleErrorConversationMarkAsRead = () => toast.error("Unable to mark conversation as read!");
 
@@ -91,6 +104,7 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
         socket?.on("conversation:online-status", handleConversationOnlineStatus);
         socket?.on("conversation:accept", handleNewConversation);
         socket?.on("conversation:update-unread-counts", handleConversationUpdateUnreadCounts);
+        socket?.on("conversation:update-conversation", handleConversationUpdate);
         socket?.on("conversation:request:error", handleErrorNewConversation);
         socket?.on("conversation:mark-as-read:error", handleErrorConversationMarkAsRead);
 
@@ -98,6 +112,7 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
             socket?.off("conversation:online-status", handleConversationOnlineStatus);
             socket?.off("conversation:accept", handleNewConversation);
             socket?.off("conversation:update-unread-counts", handleConversationUpdateUnreadCounts);
+            socket?.off("conversation:update-conversation", handleConversationUpdate);
             socket?.off("conversation:request:error", handleErrorNewConversation);
             socket?.off("conversation:mark-as-read:error", handleErrorConversationMarkAsRead);
         }

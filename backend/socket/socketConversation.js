@@ -213,7 +213,7 @@ export const conversationSendMessage = async (io, socket, data) => {
 
         io.to(room).emit("conversation:update-conversation", {
             conversationId: conversation.id,
-            lastMessage: message.lastMessagePreview,
+            lastMessage: conversation.lastMessagePreview,
             unreadCounts: {
                 [userId.toString()]: conversation.unreadCounts.get(userId.toString()),
                 [friendId]: conversation.unreadCounts.get(friendId)
