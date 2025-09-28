@@ -133,13 +133,13 @@ export const conversationMarkAsRead = async (io, socket, data) => {
             return;
         }
 
-        const conversation = await Conversation.findOne(conversationId);
+        const conversation = await Conversation.findById(conversationId);
         if (!conversation) {
             socket.emit("conversation:mark-as-read:error", {error: "No conversation found"})
             return;
         }        
 
-        conversation.unreadCounts.set(userId.getToString(), 0);
+        conversation.unreadCounts.set(userId.toString(), 0);
         await conversation.save();
 
         const room = getChatRoom(userId.toString(), friendId);

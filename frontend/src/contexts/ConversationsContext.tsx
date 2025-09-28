@@ -85,7 +85,7 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
     }
 
     const handleErrorNewConversation = () => toast.error("Unable to add conversation!");
-    const handleErrorConversationMarkAsRead = () => toast.error("Unable to add conversation!");
+    const handleErrorConversationMarkAsRead = () => toast.error("Unable to mark conversation as read!");
 
     useEffect(() => {
         socket?.on("conversation:online-status", handleConversationOnlineStatus);
