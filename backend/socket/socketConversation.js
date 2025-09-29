@@ -225,3 +225,20 @@ export const conversationSendMessage = async (io, socket, data) => {
         socket.emit("conversation:send-message:error", {error: "Error: conversation:send-message:error"})
     }
 }
+
+export const conversationTyping = async (io, socket, data) => {
+    try {
+        const {friendId, isTyping} = data;
+        const userId = socket.userId;
+
+        if (userId.toString() === friendId) return;
+
+        socket.to(friendId).emit("conversation:update-typing", {
+            userId: userId.toString(),
+            isTyping,
+        })
+
+    } catch (error) {
+        console.error("Error sending conversation typing state", error);
+    }
+}

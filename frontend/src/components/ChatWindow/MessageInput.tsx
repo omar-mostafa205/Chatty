@@ -2,13 +2,27 @@ import { Send } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { useConversationStore } from "../../stores/conversationStore";
 import { useSocketContext } from "../../contexts/SocketContext";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const MessageInput: React.FC = () => {
     const { user } = useAuthStore();
     const { selectedConversation } = useConversationStore();
     const { socket } = useSocketContext();
     const [message, setMessage] = useState('');
+
+    const typingTimeoutRef = useRef<number | null>(null);
+    const isTypingRef = useRef(false);
+
+    const emitTyping = (isTyping: boolean) => {
+        if (!socket || !user || !selectedConversation) return;
+
+        socket.emit("conversation:typing", {
+            userId: user.id,
+            friendId: selectedConversation.friend.id,
+            isTyping,
+        })
+        isTypingRef.current = isTyping;
+    }
 
     if (!selectedConversation) return;
 
@@ -23,6 +37,26 @@ const MessageInput: React.FC = () => {
         })
 
         setMessage('');
+
+        if (isTypingRef.current) {
+            emitTyping(false);
+        }
+    }
+
+    const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMessage(e.target.value);
+
+        if (!isTypingRef.current) {
+            emitTyping(true);
+        }
+
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            emitTyping(false);
+        }, 500)
     }
 
 
@@ -33,7 +67,7 @@ const MessageInput: React.FC = () => {
                     placeholder="Type a message..."
                     className="w-full text-sm bg-gray-100 rounded-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => handleOnChange(e)}
                 />
             </div>
 
