@@ -204,6 +204,8 @@ export const conversationSendMessage = async (io, socket, data) => {
             read: message.read,
         }
 
+        const updatedConversation = await Conversation.findById(conversationId);
+
         const room = getChatRoom(userId, friendId);
 
         io.to(room).emit("conversation:new-message", {
@@ -213,10 +215,10 @@ export const conversationSendMessage = async (io, socket, data) => {
 
         io.to(room).emit("conversation:update-conversation", {
             conversationId: conversation.id,
-            lastMessage: conversation.lastMessagePreview,
+            lastMessage: updatedConversation.lastMessagePreview,
             unreadCounts: {
-                [userId.toString()]: conversation.unreadCounts.get(userId.toString()),
-                [friendId]: conversation.unreadCounts.get(friendId)
+                [userId.toString()]: updatedConversation.unreadCounts.get(userId.toString()),
+                [friendId]: updatedConversation.unreadCounts.get(friendId)
             },
         });        
 
