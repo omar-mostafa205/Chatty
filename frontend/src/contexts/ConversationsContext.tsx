@@ -69,6 +69,11 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
             return [...prev, conversation];
         })
         toast.success(`You and ${conversation.friend.username} are now friends!`);
+
+        if (socket) {
+            socket.disconnect();
+            socket.connect();
+        }
     }
 
     const handleConversationUpdateUnreadCounts = (conversation: {conversationId: string, unreadCounts: Record<string, number>}) => {
@@ -94,7 +99,7 @@ export const ConversationsProvider: React.FC<{children: React.ReactNode}> = ({ c
 
                 return c;
             })
-        })
+        });
     }
 
     const handleErrorNewConversation = () => toast.error("Unable to add conversation!");

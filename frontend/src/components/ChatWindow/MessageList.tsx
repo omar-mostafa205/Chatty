@@ -20,21 +20,21 @@ const MessageList: React.FC = () => {
         hasNextPage
     } = useMessages(selectedConversation?.conversationId, containerRef);
     const { socket } = useSocketContext();
-    const lastConversationIdRef = useRef<string | null>(null);
+    const previousConversationIdRef = useRef<string | null>(null);
 
     const allMessages = data?.pages.slice().reverse().flatMap((page) => page.messages) ?? [];
 
     useEffect(() => {
         if (!selectedConversation?.conversationId) return;
 
-        if (data?.pages.length && lastConversationIdRef.current !== selectedConversation.conversationId) {
+        if (data?.pages.length && previousConversationIdRef.current !== selectedConversation.conversationId) {
             setTimeout(() => {
                 if (containerRef.current) {
                     containerRef.current.scrollTop = containerRef.current.scrollHeight;
                 }
             }, 0)
 
-            lastConversationIdRef.current = selectedConversation.conversationId;
+            previousConversationIdRef.current = selectedConversation.conversationId;
         }
 
         socket?.emit("conversation:mark-as-read", {
